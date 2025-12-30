@@ -78,7 +78,7 @@ export default function Contact() {
             animate={isInView ? { opacity: 1 } : {}}
             transition={{ delay: 0.3 }}
           >
-            Ready to protect your vehicle? Let's talk.
+            Ready to protect your vehicle? Let&apos;s talk.
           </motion.p>
         </motion.div>
 

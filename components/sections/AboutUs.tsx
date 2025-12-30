@@ -95,7 +95,7 @@ export default function AboutUs() {
                 reflecting our commitment to lasting protection.
               </p>
               <p>
-                RHINO isn't just protection—it's armor for your vehicle's surface, crafted with 
+                RHINO isn&apos;t just protection—it&apos;s armor for your vehicle&apos;s surface, crafted with 
                 the precision and care your investment deserves.
               </p>
             </div>
@@ -112,13 +112,13 @@ export default function AboutUs() {
             <h3 className="text-3xl md:text-4xl font-bold mb-4">CAR TRENDZ</h3>
             <div className="space-y-4 text-gray-300 text-lg leading-relaxed">
               <p>
-                Car Trendz is proud to bring RHINO's premium protection technology to India. 
-                As the exclusive distributor, we're introducing automotive enthusiasts across 
+                Car Trendz is proud to bring RHINO&apos;s premium protection technology to India. 
+                As the exclusive distributor, we&apos;re introducing automotive enthusiasts across 
                 the country to world-class paint protection solutions.
               </p>
               <p>
                 Understanding the unique challenges of Indian roads—from extreme weather conditions 
-                to urban driving—we've partnered with RHINO to deliver protection that's not just 
+                to urban driving—we&apos;ve partnered with RHINO to deliver protection that&apos;s not just 
                 premium, but purpose-built for Indian conditions.
               </p>
               <p>
