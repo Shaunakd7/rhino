@@ -121,6 +121,84 @@ export default function Hero() {
         style={{ opacity: bgOpacity, scale: bgScale }}
       />
 
+      {/* Geometric triangle shapes - matching PDF aesthetic */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {/* Lower right triangles */}
+        <motion.div
+          className="absolute bottom-0 right-0 w-96 h-96 opacity-[0.08]"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.08 }}
+          transition={{ duration: 1.5 }}
+        >
+          <svg viewBox="0 0 400 400" className="w-full h-full">
+            <polygon
+              points="200,50 350,300 50,300"
+              fill="currentColor"
+              className="text-gray-600"
+            />
+            <polygon
+              points="150,100 300,350 0,350"
+              fill="currentColor"
+              className="text-gray-700"
+              opacity="0.6"
+            />
+          </svg>
+        </motion.div>
+
+        {/* Middle section triangles */}
+        <motion.div
+          className="absolute top-1/2 left-1/3 w-64 h-64 opacity-[0.06] -translate-x-1/2 -translate-y-1/2"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.06 }}
+          transition={{ duration: 1.5, delay: 0.3 }}
+        >
+          <svg viewBox="0 0 300 300" className="w-full h-full">
+            <polygon
+              points="150,30 270,250 30,250"
+              fill="currentColor"
+              className="text-gray-600"
+            />
+            <polygon
+              points="120,60 240,280 0,280"
+              fill="currentColor"
+              className="text-gray-700"
+              opacity="0.5"
+            />
+          </svg>
+        </motion.div>
+
+        {/* Additional subtle triangles scattered */}
+        <motion.div
+          className="absolute bottom-1/4 left-1/4 w-48 h-48 opacity-[0.05]"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.05 }}
+          transition={{ duration: 1.5, delay: 0.6 }}
+        >
+          <svg viewBox="0 0 200 200" className="w-full h-full">
+            <polygon
+              points="100,20 180,180 20,180"
+              fill="currentColor"
+              className="text-gray-600"
+            />
+          </svg>
+        </motion.div>
+
+        <motion.div
+          className="absolute top-1/3 right-1/4 w-40 h-40 opacity-[0.04]"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.04 }}
+          transition={{ duration: 1.5, delay: 0.9 }}
+        >
+          <svg viewBox="0 0 200 200" className="w-full h-full">
+            <polygon
+              points="100,15 170,170 30,170"
+              fill="currentColor"
+              className="text-gray-700"
+            />
+          </svg>
+        </motion.div>
+      </div>
+
       <motion.div
         className="relative z-10 text-center px-4 md:px-8"
         style={{ rotateX: y, rotateY: x }}
