@@ -24,7 +24,6 @@ export default function Hero() {
     offset: ["start start", "end start"],
   });
 
-  // Background still reacts to scroll
   const bgOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
   const bgScale = useTransform(scrollYProgress, [0, 0.5], [1, 1.3]);
   const bgParallaxY = useTransform(scrollYProgress, [0, 0.5], [0, -200]);
@@ -43,9 +42,11 @@ export default function Hero() {
 
   useEffect(() => {
     const stars = Array.from({ length: 200 });
+
     stars.forEach(() => {
       const star = document.createElement("div");
       const size = Math.random() * 2 + 0.5;
+
       star.className = "space-star";
       star.style.cssText = `
         position:absolute;
@@ -58,11 +59,16 @@ export default function Hero() {
         pointer-events:none;
         box-shadow:0 0 ${size * 2}px white;
       `;
+
       containerRef.current?.appendChild(star);
 
+      // ✅ BUILD-SAFE GSAP ANIMATION
       gsap.to(star, {
-        opacity: [0.3, 1, 0.3],
-        scale: [0.8, 1.2, 0.8],
+        keyframes: [
+          { opacity: 0.3, scale: 0.8 },
+          { opacity: 1, scale: 1.2 },
+          { opacity: 0.3, scale: 0.8 },
+        ],
         duration: 2 + Math.random() * 3,
         repeat: -1,
         ease: "sine.inOut",
@@ -91,7 +97,6 @@ export default function Hero() {
         },
         "-=1.6"
       )
-      // 🔒 LOCK RHINO FOREVER
       .to(".hero-title", {
         opacity: 1,
         clearProps: "transform",
@@ -111,13 +116,11 @@ export default function Hero() {
       ref={containerRef}
       className="relative h-screen w-full overflow-hidden flex items-center justify-center"
     >
-      {/* Background reacts to scroll */}
       <motion.div
         className="absolute inset-0 bg-gradient-to-b from-black via-purple-900/20 via-blue-900/20 to-black"
         style={{ opacity: bgOpacity, scale: bgScale }}
       />
 
-      {/* RHINO — NOT affected by scroll */}
       <motion.div
         className="relative z-10 text-center px-4 md:px-8"
         style={{ rotateX: y, rotateY: x }}
