@@ -12,6 +12,8 @@ export default function Contact() {
     phone: "",
     message: "",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<"success" | "error" | null>(null);
 
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -21,12 +23,46 @@ export default function Contact() {
   const y = useTransform(scrollYProgress, [0, 1], [30, -30]);
   const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission here
-    console.log("Form submitted:", formData);
-    alert("Thank you for your inquiry! We'll get back to you soon.");
-    setFormData({ name: "", email: "", phone: "", message: "" });
+    setIsSubmitting(true);
+    setSubmitStatus(null);
+
+    try {
+      // Capture form data
+      const capturedData = {
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        phone: formData.phone.trim(),
+        message: formData.message.trim(),
+        timestamp: new Date().toISOString(),
+      };
+
+      // Log to console for now (you can replace this with API call)
+      console.log("Form submitted:", capturedData);
+      
+      // Here you can add your API call:
+      // const response = await fetch('/api/contact', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify(capturedData),
+      // });
+
+      // Simulate API call delay
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      setSubmitStatus("success");
+      setFormData({ name: "", email: "", phone: "", message: "" });
+      
+      // Reset status message after 3 seconds
+      setTimeout(() => setSubmitStatus(null), 3000);
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      setSubmitStatus("error");
+      setTimeout(() => setSubmitStatus(null), 3000);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -226,14 +262,37 @@ export default function Contact() {
               />
             </div>
 
-            <motion.button
-              type="submit"
-              className="w-full px-8 py-4 bg-white text-black font-bold rounded-lg hover:bg-gray-200 transition-colors"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              SEND MESSAGE
-            </motion.button>
+            <div className="space-y-2">
+              <motion.button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full px-8 py-4 bg-white text-black font-bold rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                whileHover={!isSubmitting ? { scale: 1.02 } : {}}
+                whileTap={!isSubmitting ? { scale: 0.98 } : {}}
+              >
+                {isSubmitting ? "SENDING..." : "SEND MESSAGE"}
+              </motion.button>
+              
+              {submitStatus === "success" && (
+                <motion.p
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="text-green-400 text-sm text-center"
+                >
+                  ✓ Thank you! Your message has been sent successfully.
+                </motion.p>
+              )}
+              
+              {submitStatus === "error" && (
+                <motion.p
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="text-red-400 text-sm text-center"
+                >
+                  ✗ Something went wrong. Please try again.
+                </motion.p>
+              )}
+            </div>
           </motion.form>
         </div>
       </div>

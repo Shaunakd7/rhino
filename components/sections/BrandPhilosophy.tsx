@@ -189,13 +189,13 @@ export default function BrandPhilosophy() {
               
               {/* Animated underline with glow */}
               <motion.div
-                className="absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-cyan-400 via-purple-400 to-transparent"
+                className="absolute bottom-0 left-0 h-[1px] bg-gradient-to-r from-gray-400/60 via-gray-300/40 to-transparent"
                 initial={{ width: 0 }}
                 whileInView={{ width: "100%" }}
                 viewport={{ once: true }}
                 transition={{ duration: 1, delay: index * 0.2 + 0.5 }}
                 style={{
-                  boxShadow: "0 0 10px rgba(147, 197, 253, 0.5)",
+                  boxShadow: "0 0 8px rgba(255, 255, 255, 0.15)",
                 }}
               />
             </motion.div>

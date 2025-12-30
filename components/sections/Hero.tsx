@@ -117,7 +117,7 @@ export default function Hero() {
       className="relative h-screen w-full overflow-hidden flex items-center justify-center"
     >
       <motion.div
-        className="absolute inset-0 bg-gradient-to-b from-black via-purple-900/20 via-blue-900/20 to-black"
+        className="absolute inset-0 bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900"
         style={{ opacity: bgOpacity, scale: bgScale }}
       />
 
