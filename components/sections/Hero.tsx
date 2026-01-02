@@ -1,156 +1,124 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import {
-  motion,
-  useScroll,
-  useTransform,
-  useMotionValue,
-  useSpring,
-} from "framer-motion";
+import { motion } from "framer-motion";
 import { gsap } from "gsap";
 
 export default function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-
-  const springConfig = { damping: 25, stiffness: 200 };
-  const x = useSpring(useTransform(mouseX, [-0.5, 0.5], [-50, 50]), springConfig);
-  const y = useSpring(useTransform(mouseY, [-0.5, 0.5], [-50, 50]), springConfig);
-
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end start"],
-  });
-
-  const bgOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
-  const bgScale = useTransform(scrollYProgress, [0, 0.5], [1, 1.3]);
-  const bgParallaxY = useTransform(scrollYProgress, [0, 0.5], [0, -200]);
 
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      const { clientX, clientY } = e;
-      const { innerWidth, innerHeight } = window;
-      mouseX.set((clientX / innerWidth - 0.5) * 2);
-      mouseY.set((clientY / innerHeight - 0.5) * 2);
-    };
+    const tl = gsap.timeline({ delay: 0.3 });
 
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, [mouseX, mouseY]);
-
-  useEffect(() => {
-    const stars = Array.from({ length: 200 });
-
-    stars.forEach(() => {
-      const star = document.createElement("div");
-      const size = Math.random() * 2 + 0.5;
-
-      star.className = "space-star";
-      star.style.cssText = `
-        position:absolute;
-        width:${size}px;
-        height:${size}px;
-        background:white;
-        border-radius:50%;
-        left:${Math.random() * 100}%;
-        top:${Math.random() * 100}%;
-        pointer-events:none;
-        box-shadow:0 0 ${size * 2}px white;
-      `;
-
-      containerRef.current?.appendChild(star);
-
-      // ✅ BUILD-SAFE GSAP ANIMATION
-      gsap.to(star, {
-        keyframes: [
-          { opacity: 0.3, scale: 0.8 },
-          { opacity: 1, scale: 1.2 },
-          { opacity: 0.3, scale: 0.8 },
-        ],
-        duration: 2 + Math.random() * 3,
-        repeat: -1,
-        ease: "sine.inOut",
-      });
-    });
-
-    const tl = gsap.timeline({ delay: 0.6 });
-
-    tl.from(".hero-title", {
-      y: 220,
-      opacity: 0,
-      rotationX: -90,
-      scale: 0.45,
-      duration: 2.4,
-      ease: "power4.out",
+    // Opening panels
+    tl.to(".panel-left", {
+      x: "-100%",
+      duration: 1.6,
+      ease: "power4.inOut",
     })
-      .from(
-        ".hero-title-letter",
+      .to(
+        ".panel-right",
         {
-          y: 160,
-          opacity: 0,
-          rotationX: -90,
-          stagger: 0.12,
-          duration: 1.3,
-          ease: "back.out(1.8)",
+          x: "100%",
+          duration: 1.6,
+          ease: "power4.inOut",
         },
-        "-=1.6"
+        "<"
       )
-      .to(".hero-title", {
-        opacity: 1,
-        clearProps: "transform",
-      });
-
-    return () => {
-      containerRef.current
-        ?.querySelectorAll(".space-star")
-        .forEach((el) => el.remove());
-    };
+      // RHINO clarity reveal
+      .fromTo(
+        ".hero-title",
+        { opacity: 0.4, filter: "blur(6px)" },
+        {
+          opacity: 1,
+          filter: "blur(0px)",
+          duration: 1.2,
+          ease: "power3.out",
+        },
+        "-=1.0"
+      )
+      .from(
+        ".hero-sub",
+        {
+          opacity: 0,
+          y: 20,
+          duration: 0.8,
+          ease: "power2.out",
+        },
+        "-=0.6"
+      );
   }, []);
-
-  const letters = "RHINO".split("");
 
   return (
     <section
       ref={containerRef}
-      className="relative h-screen w-full overflow-hidden flex items-center justify-center"
+      className="relative h-screen w-full overflow-hidden flex items-center justify-center bg-black"
     >
-      <motion.div
-        className="absolute inset-0 bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900"
-        style={{ opacity: bgOpacity, scale: bgScale }}
-      />
+      {/* ================= BACKGROUND ================= */}
+      <div className="absolute inset-0 overflow-hidden">
+        {/* Base gradient */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#05070d] via-[#0a0f1f] to-black" />
 
-      <motion.div
-        className="relative z-10 text-center px-4 md:px-8"
-        style={{ rotateX: y, rotateY: x }}
-      >
-        <h1 className="hero-title text-7xl md:text-9xl lg:text-[12rem] font-bold tracking-tight mb-6">
-          {letters.map((letter, i) => (
-            <span
-              key={i}
-              className="hero-title-letter inline-block bg-clip-text text-transparent bg-gradient-to-b from-white via-cyan-200 to-purple-300"
-              style={{
-                textShadow: `
-                  0 0 20px rgba(255,255,255,0.5),
-                  0 0 40px rgba(147,197,253,0.5),
-                  0 0 60px rgba(196,181,253,0.3)
-                `,
-              }}
-            >
-              {letter}
-            </span>
-          ))}
+        {/* Left dark-blue energy */}
+        <motion.div
+          className="absolute -left-1/3 top-1/4 w-[900px] h-[900px] rounded-full blur-[140px]"
+          style={{ background: "rgba(20,40,90,0.35)" }}
+          animate={{ x: [0, 120, 0], y: [0, -60, 0] }}
+          transition={{
+            duration: 26,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+
+        {/* Right graphite glow */}
+        <motion.div
+          className="absolute -right-1/3 top-1/3 w-[800px] h-[800px] rounded-full blur-[160px]"
+          style={{ background: "rgba(90,100,120,0.25)" }}
+          animate={{ x: [0, -100, 0], y: [0, 80, 0] }}
+          transition={{
+            duration: 32,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+
+        {/* Subtle steel-blue center glow */}
+        <motion.div
+          className="absolute left-1/2 top-1/2 w-[600px] h-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-[180px]"
+          style={{ background: "rgba(60,90,150,0.18)" }}
+          animate={{ scale: [1, 1.1, 1] }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+
+        {/* Vignette */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_40%,rgba(0,0,0,0.85)_75%)]" />
+      </div>
+
+      {/* ================= OPENING PANELS ================= */}
+      <div className="absolute inset-0 z-20 flex">
+        <div className="panel-left w-1/2 h-full bg-black" />
+        <div className="panel-right w-1/2 h-full bg-black" />
+      </div>
+
+      {/* ================= CONTENT ================= */}
+      <div className="relative z-10 text-center px-6">
+        <h1 className="hero-title text-7xl md:text-9xl lg:text-[11rem] font-semibold tracking-tight text-white mb-6">
+          RHINO
         </h1>
 
-        <p className="hero-tagline text-xl md:text-2xl lg:text-3xl font-light tracking-wider mb-4 text-gray-200">
+        <p className="hero-sub text-xl md:text-2xl text-neutral-300 tracking-wide mb-2">
           Crafted for Cars That Deserve More
         </p>
 
-        <p className="hero-description text-sm md:text-base lg:text-lg font-light tracking-wide text-gray-300 max-w-2xl mx-auto">
+        <p className="hero-sub text-sm md:text-base text-neutral-400 tracking-wide">
           A New Class of Paint Defense
         </p>
-      </motion.div>
+      </div>
     </section>
   );
 }

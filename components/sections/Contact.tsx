@@ -137,7 +137,7 @@ export default function Contact() {
                   <div className="text-2xl">📍</div>
                   <div>
                     <p className="font-semibold text-white">Address</p>
-                    <p className="text-gray-400">Car Trendz</p>
+                    <p className="text-gray-400">Car Trendz, UB City Ground Floor</p>
                     <p className="text-gray-400">India</p>
                   </div>
                 </motion.div>
@@ -151,7 +151,7 @@ export default function Contact() {
                   <div>
                     <p className="font-semibold text-white">Email</p>
                     <a href="mailto:support@rhino.com" className="text-gray-400 hover:text-white transition-colors">
-                      support@rhino.com
+                      support@cartrendz.com
                     </a>
                   </div>
                 </motion.div>
@@ -165,7 +165,7 @@ export default function Contact() {
                   <div>
                     <p className="font-semibold text-white">Phone</p>
                     <a href="tel:+911234567890" className="text-gray-400 hover:text-white transition-colors">
-                      +91 123 456 7890
+                      +91 9886066625
                     </a>
                   </div>
                 </motion.div>
@@ -176,7 +176,7 @@ export default function Contact() {
             <div className="pt-8 border-t border-white/10">
               <p className="text-gray-400 text-sm mb-4">Follow us</p>
               <div className="flex space-x-4">
-                {["Instagram", "Facebook", "LinkedIn"].map((social) => (
+                {["Instagram", "Facebook",].map((social) => (
                   <motion.a
                     key={social}
                     href="#"
