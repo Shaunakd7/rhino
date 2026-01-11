@@ -49,7 +49,12 @@ export default function Contact() {
       // });
 
       // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 500));
+     await fetch("/api/contact", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(capturedData),
+});
+
 
       setSubmitStatus("success");
       setFormData({ name: "", email: "", phone: "", message: "" });
