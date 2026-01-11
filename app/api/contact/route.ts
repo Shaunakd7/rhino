@@ -1,23 +1,32 @@
 import { NextResponse } from "next/server";
-import Twilio from "twilio";
-
-const client = new Twilio(
-  process.env.TWILIO_ACCOUNT_SID!,
-  process.env.TWILIO_AUTH_TOKEN!
-);
+import twilio from "twilio";
 
 export async function POST(req: Request) {
   try {
-    const { name, email, phone, message } = await req.json();
+    const body = await req.json();
+    const { name, email, phone, message } = body;
+
+    if (!name || !email || !message) {
+      return NextResponse.json(
+        { error: "Missing required fields" },
+        { status: 400 }
+      );
+    }
+
+    // ✅ Correct Twilio client initialization
+    const client = twilio(
+      process.env.TWILIO_ACCOUNT_SID!,
+      process.env.TWILIO_AUTH_TOKEN!
+    );
 
     const whatsappMessage = `
-📩 *New Website Lead*
+Rhino inquiry from website
 
-👤 *Name:* ${name}
-📧 *Email:* ${email}
-📞 *Phone:* ${phone || "N/A"}
+👤 Name: ${name}
+📧 Email: ${email}
+📱 Phone: ${phone || "Not provided"}
 
-💬 *Message:*
+💬 Message:
 ${message}
     `;
 
@@ -28,10 +37,10 @@ ${message}
     });
 
     return NextResponse.json({ success: true });
-  } catch (err) {
-    console.error("Twilio error:", err);
+  } catch (error) {
+    console.error("Contact API Error:", error);
     return NextResponse.json(
-      { success: false },
+      { error: "Failed to send message" },
       { status: 500 }
     );
   }
