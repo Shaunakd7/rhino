@@ -14,9 +14,16 @@ import ClosingStatement from "@/components/sections/ClosingStatement";
 
 export default function Home() {
   useEffect(() => {
-    // Initialize smooth scroll
+    // Initialize smooth scroll (desktop only for performance)
+    const isMobile =
+      typeof window !== "undefined" && window.innerWidth < 768;
+
+    if (isMobile) {
+      return;
+    }
+
     const lenis = new Lenis({
-      duration: 1.2,
+      duration: 0.9, // slightly snappier, less work per frame
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: "vertical",
       gestureOrientation: "vertical",

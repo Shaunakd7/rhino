@@ -92,7 +92,7 @@ export default function FinishesShowcase() {
 
 function ProductSection({ product, index }: { product: ProductSpec; index: number }) {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: false, margin: "-200px" });
+  const isInView = useInView(ref, { once: true, margin: "-200px" });
   const [isHovered, setIsHovered] = useState(false);
 
   const { scrollYProgress } = useScroll({
@@ -100,9 +100,9 @@ function ProductSection({ product, index }: { product: ProductSpec; index: numbe
     offset: ["start end", "end start"],
   });
 
-  const opacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0.8, 1, 1, 1.1]);
-  const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
+  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.4, 1, 1, 0.4]);
+  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.95, 1, 1.02]);
+  const y = useTransform(scrollYProgress, [0, 1], [40, -40]);
 
   return (
     <motion.div
@@ -121,7 +121,7 @@ function ProductSection({ product, index }: { product: ProductSpec; index: numbe
         />
         
         {/* Animated orbs */}
-        {[...Array(3)].map((_, i) => {
+        {[...Array(2)].map((_, i) => {
           const accentColors: Record<string, string> = {
             blue: "rgba(59, 130, 246, 0.1)",
             yellow: "rgba(234, 179, 8, 0.1)",

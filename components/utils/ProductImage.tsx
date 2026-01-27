@@ -32,10 +32,8 @@ export default function ProductImage({ productName, className = "", priority = f
     if (currentIndex < imageExtensions.length - 1) {
       const nextIndex = currentIndex + 1;
       setCurrentIndex(nextIndex);
-      console.log(`Trying next extension for ${productName}: ${imageExtensions[nextIndex]}`);
     } else {
       setImageError(true);
-      console.warn(`⚠️ Image not found for ${productName}. Tried all extensions: ${imageExtensions.join(", ")}`);
       // Hide the image element
       const target = e.target as HTMLImageElement;
       if (target) {
@@ -46,7 +44,6 @@ export default function ProductImage({ productName, className = "", priority = f
 
   const handleLoad = () => {
     setImageLoaded(true);
-    console.log(`✅ Image loaded: ${productName} from ${currentSrc}`);
   };
 
   if (imageError) {
