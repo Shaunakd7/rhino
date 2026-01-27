@@ -1,12 +1,18 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 
 export default function KSeriesIntro() {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    setIsMobile(window.innerWidth < 768);
+  }, []);
 
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -95,7 +101,7 @@ export default function KSeriesIntro() {
             </div>
 
             {/* Floating particles */}
-            {[...Array(20)].map((_, i) => (
+            {[...Array(isMobile ? 6 : 20)].map((_, i) => (
               <motion.div
                 key={i}
                 className="absolute w-2 h-2 bg-white/30 rounded-full"

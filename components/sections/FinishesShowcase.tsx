@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import ProductImage from "@/components/utils/ProductImage";
 
@@ -94,26 +94,43 @@ function ProductSection({ product, index }: { product: ProductSpec; index: numbe
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-200px" });
   const [isHovered, setIsHovered] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    setIsMobile(window.innerWidth < 768);
+  }, []);
 
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"],
   });
 
-  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.4, 1, 1, 0.4]);
-  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.95, 1, 1.02]);
-  const y = useTransform(scrollYProgress, [0, 1], [40, -40]);
+  const opacityMotion = useTransform(
+    scrollYProgress,
+    [0, 0.2, 0.8, 1],
+    [0.4, 1, 1, 0.4]
+  );
+  const scaleMotion = useTransform(
+    scrollYProgress,
+    [0, 0.5, 1],
+    [0.95, 1, 1.02]
+  );
+  const yMotion = useTransform(scrollYProgress, [0, 1], [40, -40]);
 
   return (
     <motion.div
       ref={ref}
       className={`relative h-screen w-full overflow-hidden flex items-center justify-center px-4 md:px-8 bg-gradient-to-b ${product.gradient}`}
-      style={{ opacity }}
+      style={{ opacity: isMobile ? 1 : opacityMotion }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Animated background effects */}
-      <motion.div className="absolute inset-0" style={{ scale }}>
+      <motion.div
+        className="absolute inset-0"
+        style={{ scale: isMobile ? 1 : scaleMotion }}
+      >
         <motion.div
           className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.05)_0%,transparent_70%)]"
           animate={isInView ? { opacity: 1 } : { opacity: 0 }}
@@ -121,7 +138,12 @@ function ProductSection({ product, index }: { product: ProductSpec; index: numbe
         />
         
         {/* Animated orbs */}
-        {[...Array(2)].map((_, i) => {
+        {[
+          ...Array(
+            // fewer animated blobs on mobile, same look overall
+            isMobile ? 1 : 2
+          ),
+        ].map((_, i) => {
           const accentColors: Record<string, string> = {
             blue: "rgba(59, 130, 246, 0.1)",
             yellow: "rgba(234, 179, 8, 0.1)",
@@ -156,13 +178,13 @@ function ProductSection({ product, index }: { product: ProductSpec; index: numbe
       {/* Product image (if available) */}
       <motion.div
         className="absolute inset-0 z-0"
-        style={{ y }}
+        style={{ y: isMobile ? 0 : yMotion }}
       >
         <div className="relative w-full h-full">
           <ProductImage
             productName={product.name}
             className="object-cover opacity-50"
-            priority={index === 0}
+            priority={!isMobile && index === 0}
           />
           {/* Overlay to ensure text readability while keeping image visible */}
           <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/50" />
