@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
 
 const features = [
@@ -39,6 +39,12 @@ const features = [
 export default function TechnologyFeatures() {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    setIsMobile(window.innerWidth < 768);
+  }, []);
 
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -56,18 +62,23 @@ export default function TechnologyFeatures() {
       <div className="absolute inset-0 bg-gradient-to-b from-black via-gray-900 to-black" />
 
       {/* Animated background grid */}
-      <motion.div
-        className="absolute inset-0 opacity-10"
-        style={{ y, opacity }}
-      >
-        <div className="absolute inset-0" style={{
-          backgroundImage: `
-            linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
-          `,
-          backgroundSize: "100px 100px",
-        }} />
-      </motion.div>
+      {!isMobile && (
+        <motion.div
+          className="absolute inset-0 opacity-10"
+          style={{ y, opacity }}
+        >
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `
+                linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
+              `,
+              backgroundSize: "100px 100px",
+            }}
+          />
+        </motion.div>
+      )}
 
       <div className="relative z-10 max-w-7xl mx-auto">
         <motion.div

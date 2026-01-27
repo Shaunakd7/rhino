@@ -22,7 +22,7 @@ export default function KSeriesIntro() {
   const leftX = useTransform(scrollYProgress, [0, 1], [-100, 100]);
   const rightX = useTransform(scrollYProgress, [0, 1], [100, -100]);
   const opacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.9, 1, 1.1]);
+  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.96, 1, 1.04]);
 
   return (
     <section
@@ -68,19 +68,21 @@ export default function KSeriesIntro() {
               <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/60" />
             </div>
 
-            {/* Animated gradient mesh overlay */}
-            <motion.div
-              className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(255,255,255,0.1)_0%,transparent_50%)]"
-              animate={{
-                scale: [1, 1.2, 1],
-                opacity: [0.3, 0.6, 0.3],
-              }}
-              transition={{
-                duration: 4,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-            />
+            {/* Animated gradient mesh overlay (desktop only) */}
+            {!isMobile && (
+              <motion.div
+                className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(255,255,255,0.1)_0%,transparent_50%)]"
+                animate={{
+                  scale: [1, 1.2, 1],
+                  opacity: [0.3, 0.6, 0.3],
+                }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+              />
+            )}
             
             {/* Large K letter with animation */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
@@ -100,8 +102,8 @@ export default function KSeriesIntro() {
               </motion.div>
             </div>
 
-            {/* Floating particles */}
-            {[...Array(isMobile ? 6 : 20)].map((_, i) => (
+            {/* Floating particles (fewer on mobile) */}
+            {[...Array(isMobile ? 0 : 16)].map((_, i) => (
               <motion.div
                 key={i}
                 className="absolute w-2 h-2 bg-white/30 rounded-full"

@@ -54,6 +54,13 @@ body {
   z-index: 9999;
 }
 
+/* Disable grain overlay on mobile for performance */
+@media (max-width: 767px) {
+  .grain-overlay {
+    display: none;
+  }
+}
+
 /* Smooth text reveal */
 .text-reveal {
   overflow: hidden;

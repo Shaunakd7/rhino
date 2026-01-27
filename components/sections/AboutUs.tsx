@@ -1,11 +1,17 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
 
 export default function AboutUs() {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    setIsMobile(window.innerWidth < 768);
+  }, []);
 
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -23,31 +29,33 @@ export default function AboutUs() {
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-b from-black via-gray-900 to-black" />
 
-      {/* Ambient rings */}
-      <motion.div className="absolute inset-0" style={{ opacity }}>
-        {[...Array(14)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute border border-white/5 rounded-full"
-            style={{
-              width: `${120 + Math.random() * 220}px`,
-              height: `${120 + Math.random() * 220}px`,
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-            }}
-            animate={{
-              rotate: [0, 360],
-              scale: [1, 1.15, 1],
-              opacity: [0.05, 0.14, 0.05],
-            }}
-            transition={{
-              duration: 16 + Math.random() * 10,
-              repeat: Infinity,
-              ease: "linear",
-            }}
-          />
-        ))}
-      </motion.div>
+      {/* Ambient rings (desktop only for performance) */}
+      {!isMobile && (
+        <motion.div className="absolute inset-0" style={{ opacity }}>
+          {[...Array(14)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute border border-white/5 rounded-full"
+              style={{
+                width: `${120 + Math.random() * 220}px`,
+                height: `${120 + Math.random() * 220}px`,
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+              }}
+              animate={{
+                rotate: [0, 360],
+                scale: [1, 1.15, 1],
+                opacity: [0.05, 0.14, 0.05],
+              }}
+              transition={{
+                duration: 16 + Math.random() * 10,
+                repeat: Infinity,
+                ease: "linear",
+              }}
+            />
+          ))}
+        </motion.div>
+      )}
 
       <div className="relative z-10 max-w-6xl mx-auto">
         {/* Header */}
