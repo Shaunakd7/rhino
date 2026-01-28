@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import { gsap } from "gsap";
 
@@ -15,6 +15,12 @@ const philosophyLines = [
 export default function BrandPhilosophy() {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-120px" });
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    setIsMobile(window.innerWidth < 768);
+  }, []);
 
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -25,19 +31,20 @@ export default function BrandPhilosophy() {
   const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
 
   useEffect(() => {
-    if (!isInView || !ref.current) return;
+    // Skip heavy GSAP line animation on mobile
+    if (!isInView || !ref.current || isMobile) return;
 
     const lines = ref.current.querySelectorAll(".philosophy-line");
     lines.forEach((el, i) => {
       gsap.from(el, {
         x: -240,
         opacity: 0,
-        duration: 1.2,
-        delay: i * 0.2,
+        duration: 1.0,
+        delay: i * 0.15,
         ease: "power4.out",
       });
     });
-  }, [isInView]);
+  }, [isInView, isMobile]);
 
   return (
     <section
@@ -47,19 +54,21 @@ export default function BrandPhilosophy() {
       {/* ===== CONTINUATION BACKGROUND ===== */}
       <div className="absolute inset-0 bg-gradient-to-b from-black via-[#060b1a] to-black" />
 
-      {/* Ambient depth blobs */}
-      <motion.div className="absolute inset-0" style={{ y, opacity }}>
-        <motion.div
-          className="absolute top-1/3 left-1/4 w-[600px] h-[600px] bg-[#1a2a4a]/12 rounded-full blur-[120px]"
-          animate={{ x: [0, 60, 0], y: [0, 40, 0] }}
-          transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.div
-          className="absolute bottom-1/3 right-1/4 w-[500px] h-[500px] bg-[#0f3a5c]/12 rounded-full blur-[100px]"
-          animate={{ x: [0, -50, 0], y: [0, -30, 0] }}
-          transition={{ duration: 24, repeat: Infinity, ease: "easeInOut" }}
-        />
-      </motion.div>
+      {/* Ambient depth blobs: animated on desktop, static / off on mobile */}
+      {!isMobile && (
+        <motion.div className="absolute inset-0" style={{ y, opacity }}>
+          <motion.div
+            className="absolute top-1/3 left-1/4 w-[600px] h-[600px] bg-[#1a2a4a]/12 rounded-full blur-[120px]"
+            animate={{ x: [0, 60, 0], y: [0, 40, 0] }}
+            transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <motion.div
+            className="absolute bottom-1/3 right-1/4 w-[500px] h-[500px] bg-[#0f3a5c]/12 rounded-full blur-[100px]"
+            animate={{ x: [0, -50, 0], y: [0, -30, 0] }}
+            transition={{ duration: 24, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </motion.div>
+      )}
 
       {/* ===== CONTENT ===== */}
       <div className="relative z-10 max-w-6xl mx-auto space-y-10 md:space-y-14">

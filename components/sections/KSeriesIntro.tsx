@@ -34,7 +34,7 @@ export default function KSeriesIntro() {
       {/* Animated background pattern */}
       <motion.div
         className="absolute inset-0 opacity-5"
-        style={{ opacity }}
+        style={{ opacity: isMobile ? 1 : opacity }}
       >
         <div className="absolute inset-0" style={{
           backgroundImage: `
@@ -49,7 +49,7 @@ export default function KSeriesIntro() {
           initial={{ opacity: 0, x: -100, rotateY: -90 }}
           animate={isInView ? { opacity: 1, x: 0, rotateY: 0 } : {}}
           transition={{ duration: 1, ease: "easeOut" }}
-          style={{ x: leftX, scale }}
+          style={{ x: isMobile ? 0 : leftX, scale: isMobile ? 1 : scale }}
           className="relative h-[400px] md:h-[600px] perspective-1000"
         >
           <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-black rounded-lg overflow-hidden transform-gpu">
