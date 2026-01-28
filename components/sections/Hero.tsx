@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { gsap } from "gsap";
+import Image from "next/image";
 
 export default function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -13,8 +14,15 @@ export default function Hero() {
     setIsMobile(window.innerWidth < 768);
   }, []);
 
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"],
+  });
+
+  const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+  const backgroundScale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
+
   useEffect(() => {
-    // Skip heavy GSAP door animation on mobile
     if (isMobile) return;
 
     const tl = gsap.timeline({ delay: 0.3 });
@@ -33,7 +41,6 @@ export default function Hero() {
         },
         "<"
       )
-      // SVG logo reveal
       .fromTo(
         ".hero-logo",
         { opacity: 0, scale: 0.96, filter: "blur(10px)" },
@@ -46,7 +53,6 @@ export default function Hero() {
         },
         "-=0.9"
       )
-      // Background image fade
       .to(
         ".hero-bg-image",
         {
@@ -56,7 +62,6 @@ export default function Hero() {
         },
         "-=1.0"
       )
-      // Subtext reveal
       .fromTo(
         ".hero-sub",
         { opacity: 0, y: 18 },
@@ -74,22 +79,26 @@ export default function Hero() {
   return (
     <section
       ref={containerRef}
-      className="relative h-screen w-full overflow-hidden flex items-center justify-center bg-black"
+      className="
+        relative h-screen w-full overflow-hidden bg-black
+        flex items-start md:items-center justify-center
+        pt-24 md:pt-0
+      "
     >
       {/* ================= BASE AMBIENT BACKGROUND ================= */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-[#05070d] via-[#0a0f1f] to-black" />
 
-        {/* Big blurred glows: static on mobile, animated on desktop */}
         {isMobile ? (
           <>
+            {/* softened mobile ambient blobs */}
             <div
-              className="absolute -left-1/3 top-1/4 w-[600px] h-[600px] rounded-full blur-[80px]"
-              style={{ background: "rgba(20,40,90,0.4)" }}
+              className="absolute -left-1/2 top-1/3 w-[500px] h-[500px] rounded-full blur-[120px]"
+              style={{ background: "rgba(20,40,90,0.25)" }}
             />
             <div
-              className="absolute -right-1/3 top-1/3 w-[600px] h-[600px] rounded-full blur-[90px]"
-              style={{ background: "rgba(90,100,120,0.3)" }}
+              className="absolute -right-1/2 top-1/3 w-[500px] h-[500px] rounded-full blur-[130px]"
+              style={{ background: "rgba(90,100,120,0.2)" }}
             />
           </>
         ) : (
@@ -114,14 +123,25 @@ export default function Hero() {
       </div>
 
       {/* ================= BACKGROUND IMAGE ================= */}
-      <div className="hero-bg-image absolute inset-0 z-[5] opacity-0">
-        <img
-          src="/images/products/hero-bg-desktop.png"
+      <motion.div
+        className="hero-bg-image absolute inset-0 z-[5] opacity-0"
+        style={{
+          y: isMobile ? 0 : backgroundY,
+          scale: isMobile ? 1 : backgroundScale,
+        }}
+      >
+        <Image
+          src="/images/products/hero-bg-desktop.jpg"
           alt="Hero Background"
-          className="absolute inset-0 w-full h-full object-cover"
+          fill
+          priority
+          className="object-cover"
+          quality={90}
+          sizes="100vw"
         />
-        <div className="absolute inset-0 bg-black/55" />
-      </div>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(0,0,0,0.6)_100%)]" />
+      </motion.div>
 
       {/* ================= DOOR PANELS ================= */}
       {!isMobile && (
@@ -133,8 +153,24 @@ export default function Hero() {
 
       {/* ================= CONTENT ================= */}
       <div className="relative z-10 text-center px-6">
-        {/* LOGO */}
-        <div className="hero-logo mx-auto mb-6">
+        {/* LOGO WRAPPER */}
+        <div className="relative hero-logo mx-auto mb-6 inline-block">
+          {/* MOBILE-ONLY LOGO GLOW */}
+          {isMobile && (
+            <div
+              className="
+                absolute inset-0 -z-10
+                rounded-full
+                blur-[60px]
+                scale-110
+              "
+              style={{
+                background:
+                  "radial-gradient(circle, rgba(180,210,255,0.45) 0%, rgba(120,160,255,0.25) 35%, rgba(0,0,0,0) 70%)",
+              }}
+            />
+          )}
+
           <img
             src="/images/products/logo.svg"
             alt="RHINO Logo"
@@ -149,21 +185,23 @@ export default function Hero() {
           />
         </div>
 
-        {/* SUBTEXT WITH PERMANENT, VISIBLE GLOW */}
-        <p
+        <motion.p
           className="hero-sub text-xl md:text-2xl tracking-wide mb-2"
           style={{
             color: "#ffffff",
             textShadow: `
-              0 0 6px rgba(255,255,255,0.45),
+              0 0 6px rgba(2, 0, 0, 0.45),
               0 0 18px rgba(200,220,255,0.25)
             `,
           }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: isMobile ? 0.3 : 1.2, duration: 0.8 }}
         >
           Crafted for Cars That Deserve More
-        </p>
+        </motion.p>
 
-        <p
+        <motion.p
           className="hero-sub text-sm md:text-base tracking-wide"
           style={{
             color: "#ffffff",
@@ -172,9 +210,12 @@ export default function Hero() {
               0 0 14px rgba(180,210,255,0.2)
             `,
           }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: isMobile ? 0.5 : 1.4, duration: 0.8 }}
         >
           A New Class of Paint Defense
-        </p>
+        </motion.p>
       </div>
     </section>
   );
