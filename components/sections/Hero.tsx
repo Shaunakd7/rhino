@@ -5,14 +5,9 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { gsap } from "gsap";
 import Image from "next/image";
 
-export default function Hero() {
+export default function HeroInner({ isMobile }: { isMobile: boolean }) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    setIsMobile(window.innerWidth < 768);
-  }, []);
+  const [textReady, setTextReady] = useState(false);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -23,7 +18,11 @@ export default function Hero() {
   const backgroundScale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
 
   useEffect(() => {
-    if (isMobile) return;
+    if (isMobile) {
+      // Mobile: background + logo already visible, text comes after
+      setTimeout(() => setTextReady(true), 300);
+      return;
+    }
 
     const tl = gsap.timeline({ delay: 0.3 });
 
@@ -41,6 +40,7 @@ export default function Hero() {
         },
         "<"
       )
+      // LOGO COMES IN
       .fromTo(
         ".hero-logo",
         { opacity: 0, scale: 0.96, filter: "blur(10px)" },
@@ -53,79 +53,36 @@ export default function Hero() {
         },
         "-=0.9"
       )
+      // BACKGROUND COMES IN WITH LOGO (AS BEFORE)
       .to(
         ".hero-bg-image",
-        {
-          opacity: 1,
-          duration: 1.4,
-          ease: "power2.out",
-        },
+        { opacity: 1, duration: 1.4, ease: "power2.out" },
         "-=1.0"
       )
-      .fromTo(
-        ".hero-sub",
-        { opacity: 0, y: 18 },
-        {
-          opacity: 1,
-          y: 0,
-          clearProps: "opacity,transform",
-          duration: 0.7,
-          ease: "power2.out",
-        },
-        "-=0.6"
-      );
+      // ONLY NOW TEXT IS ALLOWED
+      .add(() => {
+        setTextReady(true);
+      });
   }, [isMobile]);
+
+  const textHidden = { opacity: 0, scale: 0.985 };
+  const textVisible = { opacity: 1, scale: 1 };
+
+  const textTransition = {
+    duration: 0.75,
+    ease: [0.25, 1, 0.35, 1],
+  };
 
   return (
     <section
       ref={containerRef}
-      className="
-        relative h-screen w-full overflow-hidden bg-black
-        flex items-start md:items-center justify-center
-        pt-24 md:pt-0
-      "
+      className="relative h-screen w-full overflow-hidden bg-black flex items-start md:items-center justify-center pt-24 md:pt-0"
     >
-      {/* ================= BASE AMBIENT BACKGROUND ================= */}
-      <div className="absolute inset-0 z-0 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-[#05070d] via-[#0a0f1f] to-black" />
-
-        {isMobile ? (
-          <>
-            {/* softened mobile ambient blobs */}
-            <div
-              className="absolute -left-1/2 top-1/3 w-[500px] h-[500px] rounded-full blur-[120px]"
-              style={{ background: "rgba(20,40,90,0.25)" }}
-            />
-            <div
-              className="absolute -right-1/2 top-1/3 w-[500px] h-[500px] rounded-full blur-[130px]"
-              style={{ background: "rgba(90,100,120,0.2)" }}
-            />
-          </>
-        ) : (
-          <>
-            <motion.div
-              className="absolute -left-1/3 top-1/4 w-[900px] h-[900px] rounded-full blur-[140px]"
-              style={{ background: "rgba(20,40,90,0.35)" }}
-              animate={{ x: [0, 120, 0], y: [0, -60, 0] }}
-              transition={{ duration: 26, repeat: Infinity, ease: "easeInOut" }}
-            />
-
-            <motion.div
-              className="absolute -right-1/3 top-1/3 w-[800px] h-[800px] rounded-full blur-[160px]"
-              style={{ background: "rgba(90,100,120,0.25)" }}
-              animate={{ x: [0, -100, 0], y: [0, 80, 0] }}
-              transition={{ duration: 32, repeat: Infinity, ease: "easeInOut" }}
-            />
-          </>
-        )}
-
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_40%,rgba(0,0,0,0.85)_75%)]" />
-      </div>
-
-      {/* ================= BACKGROUND IMAGE ================= */}
+      {/* ================= BACKGROUND ================= */}
       <motion.div
-        className="hero-bg-image absolute inset-0 z-[5] opacity-0"
+        className="hero-bg-image absolute inset-0 z-[5]"
         style={{
+          opacity: isMobile ? 1 : 0,
           y: isMobile ? 0 : backgroundY,
           scale: isMobile ? 1 : backgroundScale,
         }}
@@ -136,86 +93,45 @@ export default function Hero() {
           fill
           priority
           className="object-cover"
-          quality={90}
-          sizes="100vw"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(0,0,0,0.6)_100%)]" />
       </motion.div>
-
-      {/* ================= DOOR PANELS ================= */}
-      {!isMobile && (
-        <div className="absolute inset-0 z-20 flex">
-          <div className="panel-left w-1/2 h-full bg-black" />
-          <div className="panel-right w-1/2 h-full bg-black" />
-        </div>
-      )}
 
       {/* ================= CONTENT ================= */}
       <div className="relative z-10 text-center px-6">
-        {/* LOGO WRAPPER */}
-        <div className="relative hero-logo mx-auto mb-6 inline-block">
-          {/* MOBILE-ONLY LOGO GLOW */}
-          {isMobile && (
-            <div
-              className="
-                absolute inset-0 -z-10
-                rounded-full
-                blur-[60px]
-                scale-110
-              "
-              style={{
-                background:
-                  "radial-gradient(circle, rgba(180,210,255,0.45) 0%, rgba(120,160,255,0.25) 35%, rgba(0,0,0,0) 70%)",
-              }}
-            />
-          )}
-
+        {/* LOGO FIRST */}
+        <div className="hero-logo mx-auto mb-6">
           <img
             src="/images/products/logo.svg"
             alt="RHINO Logo"
-            className="
-              mx-auto
-              w-[350px]
-              sm:w-[500px]
-              md:w-[520px]
-              lg:w-[620px]
-              xl:w-[700px]
-            "
+            className="mx-auto w-[350px] sm:w-[500px]"
           />
         </div>
 
-        <motion.p
-          className="hero-sub text-xl md:text-2xl tracking-wide mb-2"
+        {/* TEXT AFTER LOGO + BG */}
+        <div
           style={{
-            color: "#ffffff",
-            textShadow: `
-              0 0 6px rgba(2, 0, 0, 0.45),
-              0 0 18px rgba(200,220,255,0.25)
-            `,
+            contain: "layout paint",
+            transform: "translateZ(0)",
           }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: isMobile ? 0.3 : 1.2, duration: 0.8 }}
         >
-          Crafted for Cars That Deserve More
-        </motion.p>
+          <motion.p
+            className="hero-sub text-xl mb-2"
+            initial={false}
+            animate={textReady ? textVisible : textHidden}
+            transition={textTransition}
+          >
+            Crafted for Cars That Deserve More
+          </motion.p>
 
-        <motion.p
-          className="hero-sub text-sm md:text-base tracking-wide"
-          style={{
-            color: "#ffffff",
-            textShadow: `
-              0 0 4px rgba(255,255,255,0.4),
-              0 0 14px rgba(180,210,255,0.2)
-            `,
-          }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: isMobile ? 0.5 : 1.4, duration: 0.8 }}
-        >
-          A New Class of Paint Defense
-        </motion.p>
+          <motion.p
+            className="hero-sub text-sm"
+            initial={false}
+            animate={textReady ? textVisible : textHidden}
+            transition={{ ...textTransition, delay: 0.12 }}
+          >
+            A New Class of Paint Defense
+          </motion.p>
+        </div>
       </div>
     </section>
   );

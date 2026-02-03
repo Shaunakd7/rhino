@@ -84,26 +84,35 @@ export default function KSeriesIntro() {
               />
             )}
             
-            {/* Large K letter with animation */}
+            {/* Large K letter with animation (desktop only) */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
               <motion.div
                 className="text-6xl md:text-8xl font-bold opacity-30"
-                animate={{
-                  scale: [1, 1.1, 1],
-                  rotate: [0, 5, -5, 0],
-                }}
-                transition={{
-                  duration: 6,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
+                animate={
+                  isMobile
+                    ? {}
+                    : {
+                        scale: [1, 1.1, 1],
+                        rotate: [0, 5, -5, 0],
+                      }
+                }
+                transition={
+                  isMobile
+                    ? undefined
+                    : {
+                        duration: 6,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                      }
+                }
               >
                 K
               </motion.div>
             </div>
 
-            {/* Floating particles (fewer on mobile) */}
-            {[...Array(isMobile ? 0 : 16)].map((_, i) => (
+            {/* Floating particles (desktop only now) */}
+            {!isMobile &&
+              [...Array(16)].map((_, i) => (
               <motion.div
                 key={i}
                 className="absolute w-2 h-2 bg-white/30 rounded-full"
@@ -126,18 +135,20 @@ export default function KSeriesIntro() {
             ))}
           </div>
 
-          {/* Enhanced glow effect */}
-          <motion.div
-            className="absolute -inset-1 bg-gradient-to-r from-white/30 via-transparent to-white/30 rounded-lg blur-xl"
-            animate={{
-              opacity: [0.3, 0.7, 0.3],
-              scale: [1, 1.05, 1],
-            }}
-            transition={{
-              duration: 3,
-              repeat: Infinity,
-            }}
-          />
+          {/* Enhanced glow effect - disable continuous animation on mobile */}
+          {!isMobile && (
+            <motion.div
+              className="absolute -inset-1 bg-gradient-to-r from-white/30 via-transparent to-white/30 rounded-lg blur-xl"
+              animate={{
+                opacity: [0.3, 0.7, 0.3],
+                scale: [1, 1.05, 1],
+              }}
+              transition={{
+                duration: 3,
+                repeat: Infinity,
+              }}
+            />
+          )}
         </motion.div>
 
         {/* Content side */}
