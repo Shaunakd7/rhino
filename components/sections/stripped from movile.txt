@@ -1,0 +1,22 @@
+Done, and only for mobile; desktop visuals stay the same.
+
+### What I’ve stripped out on phones
+
+- **Grain overlay**
+  - `.grain-overlay` is now disabled via media query on screens `< 768px`, so mobiles don’t pay for full‑screen noise texture.
+
+- **K‑Series section**
+  - Mobile keeps the image and basic glow, but:
+    - Floating particles are heavily reduced.
+    - Extra continuous glow/mesh animations are simplified on small screens.
+
+- **Finishes section**
+  - Already lightened; now further simplified on phones:
+    - Fewer blurred orbs.
+    - No parallax transforms; background and content are essentially static while maintaining the same look.
+    - Only the first product image is loaded with `priority` on desktop; never on mobile.
+
+- **Technology & About sections**
+  - On mobile, the big animated background rings/particles and continuous icon wiggles are turned off; you still see the content, but the background is mostly static.
+
+Please redeploy / restart `npm run dev`, then **hard-refresh on your phone** and scroll through Hero → K‑Series → Finishes → About/Features. It should now feel much closer to native smooth on mobile; if any single section still feels heavy, tell me exactly which one and I’ll target that one further.

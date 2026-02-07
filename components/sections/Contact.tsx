@@ -29,7 +29,6 @@ export default function Contact() {
     setSubmitStatus(null);
 
     try {
-      // Capture form data
       const capturedData = {
         name: formData.name.trim(),
         email: formData.email.trim(),
@@ -38,28 +37,17 @@ export default function Contact() {
         timestamp: new Date().toISOString(),
       };
 
-      // Log to console for now (you can replace this with API call)
       console.log("Form submitted:", capturedData);
-      
-      // Here you can add your API call:
-      // const response = await fetch('/api/contact', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(capturedData),
-      // });
 
-      // Simulate API call delay
-     await fetch("/api/contact", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify(capturedData),
-});
-
+      await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(capturedData),
+      });
 
       setSubmitStatus("success");
       setFormData({ name: "", email: "", phone: "", message: "" });
-      
-      // Reset status message after 3 seconds
+
       setTimeout(() => setSubmitStatus(null), 3000);
     } catch (error) {
       console.error("Error submitting form:", error);
@@ -70,7 +58,9 @@ export default function Contact() {
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -85,17 +75,17 @@ export default function Contact() {
       <div className="absolute inset-0 bg-gradient-to-b from-black via-gray-900 to-black" />
 
       {/* Animated grid background */}
-      <motion.div
-        className="absolute inset-0 opacity-10"
-        style={{ opacity, y }}
-      >
-        <div className="absolute inset-0" style={{
-          backgroundImage: `
-            linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
-          `,
-          backgroundSize: "50px 50px",
-        }} />
+      <motion.div className="absolute inset-0 opacity-10" style={{ opacity, y }}>
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
+            `,
+            backgroundSize: "50px 50px",
+          }}
+        />
       </motion.div>
 
       <div className="relative z-10 max-w-6xl mx-auto">
@@ -142,7 +132,13 @@ export default function Contact() {
                   <div className="text-2xl">📍</div>
                   <div>
                     <p className="font-semibold text-white">Address</p>
-                    <p className="text-gray-400">Car Trendz, UB City Ground Floor</p>
+                    <p className="text-gray-400">
+                      Car Trendz, UB City Ground Floor
+                    </p>
+                    <p className="text-gray-400">
+                      Vittal Mallya Rd, KG Halli, D' Souza Layout, Ashok Nagar,
+                      Bengaluru, Karnataka 560001
+                    </p>
                     <p className="text-gray-400">India</p>
                   </div>
                 </motion.div>
@@ -155,7 +151,10 @@ export default function Contact() {
                   <div className="text-2xl">📧</div>
                   <div>
                     <p className="font-semibold text-white">Email</p>
-                    <a href="mailto:support@rhino.com" className="text-gray-400 hover:text-white transition-colors">
+                    <a
+                      href="mailto:support@rhino.com"
+                      className="text-gray-400 hover:text-white transition-colors"
+                    >
                       support@cartrendz.com
                     </a>
                   </div>
@@ -169,7 +168,10 @@ export default function Contact() {
                   <div className="text-2xl">📱</div>
                   <div>
                     <p className="font-semibold text-white">Phone</p>
-                    <a href="tel:+911234567890" className="text-gray-400 hover:text-white transition-colors">
+                    <a
+                      href="tel:+911234567890"
+                      className="text-gray-400 hover:text-white transition-colors"
+                    >
                       +91 9886066625
                     </a>
                   </div>
@@ -181,15 +183,26 @@ export default function Contact() {
             <div className="pt-8 border-t border-white/10">
               <p className="text-gray-400 text-sm mb-4">Follow us</p>
               <div className="flex space-x-4">
-                {["Instagram", "Facebook",].map((social) => (
+                {[
+                  {
+                    name: "Instagram",
+                    href: "https://www.instagram.com/vkoolbengaluru/",
+                  },
+                  {
+                    name: "Facebook",
+                    href: "https://www.facebook.com/vkoolIndia1"
+                  },
+                ].map((social) => (
                   <motion.a
-                    key={social}
-                    href="#"
+                    key={social.name}
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="text-gray-500 hover:text-white transition-colors text-sm"
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.95 }}
                   >
-                    {social}
+                    {social.name}
                   </motion.a>
                 ))}
               </div>
@@ -205,7 +218,10 @@ export default function Contact() {
             transition={{ delay: 0.5, duration: 0.8 }}
           >
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-2">
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium text-gray-300 mb-2"
+              >
                 Name
               </label>
               <input
@@ -221,7 +237,10 @@ export default function Contact() {
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-300 mb-2"
+              >
                 Email
               </label>
               <input
@@ -237,7 +256,10 @@ export default function Contact() {
             </div>
 
             <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-300 mb-2">
+              <label
+                htmlFor="phone"
+                className="block text-sm font-medium text-gray-300 mb-2"
+              >
                 Phone
               </label>
               <input
@@ -252,7 +274,10 @@ export default function Contact() {
             </div>
 
             <div>
-              <label htmlFor="message" className="block text-sm font-medium text-gray-300 mb-2">
+              <label
+                htmlFor="message"
+                className="block text-sm font-medium text-gray-300 mb-2"
+              >
                 Message
               </label>
               <textarea
@@ -277,7 +302,7 @@ export default function Contact() {
               >
                 {isSubmitting ? "SENDING..." : "SEND MESSAGE"}
               </motion.button>
-              
+
               {submitStatus === "success" && (
                 <motion.p
                   initial={{ opacity: 0, y: -10 }}
@@ -287,7 +312,7 @@ export default function Contact() {
                   ✓ Thank you! Your message has been sent successfully.
                 </motion.p>
               )}
-              
+
               {submitStatus === "error" && (
                 <motion.p
                   initial={{ opacity: 0, y: -10 }}
@@ -304,4 +329,3 @@ export default function Contact() {
     </section>
   );
 }
-
