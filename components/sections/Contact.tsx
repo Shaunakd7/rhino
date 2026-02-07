@@ -13,7 +13,9 @@ export default function Contact() {
     message: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<"success" | "error" | null>(null);
+  const [submitStatus, setSubmitStatus] = useState<"success" | "error" | null>(
+    null
+  );
 
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -21,7 +23,11 @@ export default function Contact() {
   });
 
   const y = useTransform(scrollYProgress, [0, 1], [30, -30]);
-  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
+  const opacity = useTransform(
+    scrollYProgress,
+    [0, 0.2, 0.8, 1],
+    [0, 1, 1, 0]
+  );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,8 +42,6 @@ export default function Contact() {
         message: formData.message.trim(),
         timestamp: new Date().toISOString(),
       };
-
-      console.log("Form submitted:", capturedData);
 
       await fetch("/api/contact", {
         method: "POST",
@@ -74,7 +78,6 @@ export default function Contact() {
     >
       <div className="absolute inset-0 bg-gradient-to-b from-black via-gray-900 to-black" />
 
-      {/* Animated grid background */}
       <motion.div className="absolute inset-0 opacity-10" style={{ opacity, y }}>
         <div
           className="absolute inset-0"
@@ -114,7 +117,6 @@ export default function Contact() {
         </motion.div>
 
         <div className="grid md:grid-cols-2 gap-12 md:gap-20">
-          {/* Contact Information */}
           <motion.div
             className="space-y-8"
             initial={{ opacity: 0, x: -50 }}
@@ -124,11 +126,7 @@ export default function Contact() {
             <div>
               <h3 className="text-2xl font-bold mb-6">Contact Information</h3>
               <div className="space-y-6">
-                <motion.div
-                  className="flex items-start space-x-4"
-                  whileHover={{ x: 5 }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                >
+                <motion.div className="flex items-start space-x-4">
                   <div className="text-2xl">📍</div>
                   <div>
                     <p className="font-semibold text-white">Address</p>
@@ -136,23 +134,19 @@ export default function Contact() {
                       Car Trendz, UB City Ground Floor
                     </p>
                     <p className="text-gray-400">
-                      Vittal Mallya Rd, KG Halli, D' Souza Layout, Ashok Nagar,
-                      Bengaluru, Karnataka 560001
+                      Vittal Mallya Rd, KG Halli, D&apos; Souza Layout, Ashok
+                      Nagar, Bengaluru, Karnataka 560001
                     </p>
                     <p className="text-gray-400">India</p>
                   </div>
                 </motion.div>
 
-                <motion.div
-                  className="flex items-start space-x-4"
-                  whileHover={{ x: 5 }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                >
+                <motion.div className="flex items-start space-x-4">
                   <div className="text-2xl">📧</div>
                   <div>
                     <p className="font-semibold text-white">Email</p>
                     <a
-                      href="mailto:support@rhino.com"
+                      href="mailto:support@cartrendz.com"
                       className="text-gray-400 hover:text-white transition-colors"
                     >
                       support@cartrendz.com
@@ -160,16 +154,12 @@ export default function Contact() {
                   </div>
                 </motion.div>
 
-                <motion.div
-                  className="flex items-start space-x-4"
-                  whileHover={{ x: 5 }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                >
+                <motion.div className="flex items-start space-x-4">
                   <div className="text-2xl">📱</div>
                   <div>
                     <p className="font-semibold text-white">Phone</p>
                     <a
-                      href="tel:+911234567890"
+                      href="tel:+919886066625"
                       className="text-gray-400 hover:text-white transition-colors"
                     >
                       +91 9886066625
@@ -179,7 +169,6 @@ export default function Contact() {
               </div>
             </div>
 
-            {/* Social/Additional Info */}
             <div className="pt-8 border-t border-white/10">
               <p className="text-gray-400 text-sm mb-4">Follow us</p>
               <div className="flex space-x-4">
@@ -190,7 +179,7 @@ export default function Contact() {
                   },
                   {
                     name: "Facebook",
-                    href: "https://www.facebook.com/vkoolIndia1"
+                    href: "https://www.facebook.com/vkoolIndia1",
                   },
                 ].map((social) => (
                   <motion.a
@@ -199,8 +188,6 @@ export default function Contact() {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-gray-500 hover:text-white transition-colors text-sm"
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
                   >
                     {social.name}
                   </motion.a>
@@ -209,7 +196,6 @@ export default function Contact() {
             </div>
           </motion.div>
 
-          {/* Contact Form */}
           <motion.form
             onSubmit={handleSubmit}
             className="space-y-6"
@@ -218,111 +204,77 @@ export default function Contact() {
             transition={{ delay: 0.5, duration: 0.8 }}
           >
             <div>
-              <label
-                htmlFor="name"
-                className="block text-sm font-medium text-gray-300 mb-2"
-              >
+              <label className="block text-sm font-medium text-gray-300 mb-2">
                 Name
               </label>
               <input
-                type="text"
-                id="name"
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-white/30 text-white placeholder-gray-500 transition-all"
-                placeholder="Your name"
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white"
               />
             </div>
 
             <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-300 mb-2"
-              >
+              <label className="block text-sm font-medium text-gray-300 mb-2">
                 Email
               </label>
               <input
-                type="email"
-                id="email"
                 name="email"
+                type="email"
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-white/30 text-white placeholder-gray-500 transition-all"
-                placeholder="your.email@example.com"
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white"
               />
             </div>
 
             <div>
-              <label
-                htmlFor="phone"
-                className="block text-sm font-medium text-gray-300 mb-2"
-              >
+              <label className="block text-sm font-medium text-gray-300 mb-2">
                 Phone
               </label>
               <input
-                type="tel"
-                id="phone"
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-white/30 text-white placeholder-gray-500 transition-all"
-                placeholder="+91 123 456 7890"
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white"
               />
             </div>
 
             <div>
-              <label
-                htmlFor="message"
-                className="block text-sm font-medium text-gray-300 mb-2"
-              >
+              <label className="block text-sm font-medium text-gray-300 mb-2">
                 Message
               </label>
               <textarea
-                id="message"
                 name="message"
                 value={formData.message}
                 onChange={handleChange}
                 required
                 rows={5}
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-white/30 text-white placeholder-gray-500 transition-all resize-none"
-                placeholder="Tell us about your vehicle and protection needs..."
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white resize-none"
               />
             </div>
 
-            <div className="space-y-2">
-              <motion.button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full px-8 py-4 bg-white text-black font-bold rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                whileHover={!isSubmitting ? { scale: 1.02 } : {}}
-                whileTap={!isSubmitting ? { scale: 0.98 } : {}}
-              >
-                {isSubmitting ? "SENDING..." : "SEND MESSAGE"}
-              </motion.button>
+            <motion.button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full px-8 py-4 bg-white text-black font-bold rounded-lg"
+            >
+              {isSubmitting ? "SENDING..." : "SEND MESSAGE"}
+            </motion.button>
 
-              {submitStatus === "success" && (
-                <motion.p
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="text-green-400 text-sm text-center"
-                >
-                  ✓ Thank you! Your message has been sent successfully.
-                </motion.p>
-              )}
+            {submitStatus === "success" && (
+              <p className="text-green-400 text-sm text-center">
+                ✓ Thank you! Your message has been sent successfully.
+              </p>
+            )}
 
-              {submitStatus === "error" && (
-                <motion.p
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="text-red-400 text-sm text-center"
-                >
-                  ✗ Something went wrong. Please try again.
-                </motion.p>
-              )}
-            </div>
+            {submitStatus === "error" && (
+              <p className="text-red-400 text-sm text-center">
+                ✗ Something went wrong. Please try again.
+              </p>
+            )}
           </motion.form>
         </div>
       </div>
